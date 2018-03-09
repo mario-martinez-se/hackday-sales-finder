@@ -1,0 +1,18 @@
+<h1>Secret Escapes</h1>
+
+{{#if salesForCity}}
+	<h2>{{city}}</h2>
+	<p>We've found some sales in {{city}}</p>
+	{{#each salesForCity}}
+		<li><a href='https://www.secretescapes.com/sale/offers/{{id}}'>{{title}}</a></li>
+	{{/each}}
+{{/if}}
+
+{{#if salesForCountry}}
+	<h2>{{country}}</h2>
+	<p>We've found some sales in {{country}}</p>
+	{{#each salesForCountry}}
+		<li><a href='https://www.secretescapes.com/sale/offers/{{id}}'>{{title}}</a></li>
+	{{/each}}
+{{/if}}
+

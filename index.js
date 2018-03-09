@@ -6,20 +6,23 @@ const fs = Promise.promisifyAll(require('fs'));
 const rp = require('request-promise');
 const express = require('express');
 const exphbs  = require('express-handlebars');
+const bodyParser = require("body-parser");
 require('dotenv').config();
 
 const app = express();
 const port = 3000;
 
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 
-app.get('/', (request, response) => {
-	// fs.readFileAsync('test_data/test_copenhagen.html', 'utf8')
-	// fs.readFileAsync('test_data/test_mexico.html', 'utf8')
-	fs.readFileAsync('test_data/test_venice.html', 'utf8')
-	// fs.readFileAsync('test_data/test_spain.html', 'utf8')
-	//fs.readFileAsync('test_data/test_southeast.html', 'utf8')
+app.get('/', (request, response) =>{
+	response.render('home');
+});
+
+app.post('/find', (request, response) => {
+	rp(request.body.url_analyse)
 	.then(data => new language.LanguageServiceClient()
 		.analyzeEntities(
 			{
@@ -54,7 +57,7 @@ app.get('/', (request, response) => {
 		const salesForCountry = (data[1] || {match: undefined}).match;
 		const city = data[2];
 		const country = data[3];
-		response.render('home', {salesForCity: salesForCity || [], salesForCountry: salesForCountry || [], city: city, country: country})
+		response.render('find_results', {salesForCity: salesForCity || [], salesForCountry: salesForCountry || [], city: city, country: country})
 
 	})
 	.catch(err => {
