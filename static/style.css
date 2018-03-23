@@ -1,0 +1,108 @@
+body {
+  background-color: #ffffff;
+  padding: 3em;
+  font-family: 'Open Sans', sans-serif;
+}
+
+main {
+  background-color: white;
+  padding: 2em;
+}
+
+footer {
+  font-size: .8em;
+}
+
+nav {
+  padding: 1em; 
+  background: #ffffff;
+}
+
+img {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+
+
+/* TYPOGRAHY */
+h1, h2, h3 {
+  clear: both;
+}
+h1 {
+  font-size: 1.5em;
+  font-weight: normal;
+  margin: 0;
+  font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+h1, footer {
+  letter-spacing: .05em;
+}
+
+
+h2 {
+  font-size: 1.3em;
+  font-weight: normal;
+}
+
+h3 {
+  font-size: 1em;
+  font-weight: 400;
+}
+
+a {
+  text-decoration: none;
+  color: black; 
+}
+
+h3 {
+  font-weight: bold;
+}
+
+li {
+  list-style-type: none;
+  list-style-position: outside;
+  margin-bottom: 3em; 
+}
+
+ul, li {
+  box-sizing: border-box;
+}
+
+/* <ul> */
+.cards-wrapper {
+  display: block;
+  box-sizing: border-box;
+  clear: both;
+}
+
+/* <li> */
+.card {
+  background-color: white;
+  min-width: 300px;
+  max-width: 500px;
+  float: left;
+  margin-right: 15px;
+}
+
+.card-text {
+  padding: 1em;
+}
+
+.card:hover {
+  -webkit-box-shadow: 5px 5px 49px 3px rgba(194,194,194,1);
+  -moz-box-shadow: 5px 5px 49px 3px rgba(194,194,194,1);
+  box-shadow: 5px 5px 49px 3px rgba(194,194,194,1);
+  border: 1px solid #ff8c00;
+}
+
+
+.error {
+  background-color: #ffe5ea;
+  padding: 1em;
+  color: #ff0033;
+}
+

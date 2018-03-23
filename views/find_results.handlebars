@@ -1,4 +1,4 @@
-<h1>Secret Escapes</h1>
+<h1>Secret Escapes Smart Sale Finder</h1>
 
 <div>
   <div data-bind="if: $data.city">
@@ -7,18 +7,19 @@
       <p>
         We are searching sales in <span data-bind="text: city"></span>...
       </p>
-      <img style="height: 60px;" src="https://cdn.glitch.com/fb258a74-00e9-4f2c-a2b1-35f603dbcab3%2Floading.gif?1521806195818"/>
+      <img style="height: 60px; width: auto;" src="https://cdn.glitch.com/fb258a74-00e9-4f2c-a2b1-35f603dbcab3%2Floading.gif?1521806195818"/>
     </div>
-    <p data-bind="if: noResultsForCity()">
+    <p data-bind="if: noResultsForCity()" class="error">
       Sorry, we couldn't find any sales for <span data-bind="text: city"></span>
     </p>
-    <ul data-bind="foreach: cityResults">
-      <li><a href="#" target="_blank" data-bind="attr: {href: 'https://www.secretescapes.com/sale/offers/'+id}"><span data-bind="text: title"></span></a></li>
+    
+    <ul data-bind="foreach: cityResults" class="cards-wrapper">
+      {{> sale_card}}
     </ul>
   </div>
 
   <div data-bind="if: !$data.city">
-    <p>
+    <p class="error">
       Sorry, we couldn't find any city.
     </p>
   </div>
@@ -31,23 +32,23 @@
       <p>
         We are searching sales in <span data-bind="text: country"></span>...
       </p>
-      <img style="height: 60px;" src="https://cdn.glitch.com/fb258a74-00e9-4f2c-a2b1-35f603dbcab3%2Floading.gif?1521806195818"/>
+      <img style="height: 60px; width: auto;" src="https://cdn.glitch.com/fb258a74-00e9-4f2c-a2b1-35f603dbcab3%2Floading.gif?1521806195818"/>
     </div>
-    <p data-bind="if: noResultsForCountry()">
+    <p data-bind="if: noResultsForCountry()" class="error">
       Sorry, we couldn't find any sales for <span data-bind="text: country"></span>
     </p>
-    <ul data-bind="foreach: countryResults">
-      <li><a href="#" target="_blank" data-bind="attr: {href: 'https://www.secretescapes.com/sale/offers/'+id}"><span data-bind="text: title"></span></a></li>
+    <ul data-bind="foreach: countryResults" class="cards-wrapper">
+      {{> sale_card}}
     </ul>
   </div>
 
   <div data-bind="if: !$data.country">
-    <p>
+    <p class="error">
       Sorry, we couldn't find any country.
     </p>
   </div>
 </div>
-
+<script src="script.js"></script>
 <script>
   $( document ).ready(() => {
     var myViewModel = {
@@ -63,24 +64,6 @@
       {{/if}}
     };
     ko.applyBindings(myViewModel);
-    
-    if (myViewModel.city) {
-      $.ajax({
-        type: "GET",
-        url: `sales?query=${myViewModel.city}`,
-        success: data => data.match.length > 0 ? myViewModel.cityResults(data.match) : myViewModel.noResultsForCity(true),
-        error: () => noResultsForCity(true)
-      });
-    }
-    
-    if (myViewModel.country) {
-      $.ajax({
-        type: "GET",
-        url: `sales?query=${myViewModel.country}`,
-        success: data => data.match.length > 0 ? myViewModel.countryResults(data.match) : myViewModel.noResultsForCountry(true),
-        error: () => noResultsForCountry(true)
-      });
-    }
-    
+    init(myViewModel);
   });
 </script>
