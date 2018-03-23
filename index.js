@@ -24,7 +24,10 @@ app.get('/sales', (request, response) => {
   if (query !== undefined) {
     console.log(`Searching ${query} in SE API`);
     rp(getSEPostRequestForQuery(query))
-    .then(data => console.log(`Found ${data.match.length} sales for ${query}`) && response.send(data));
+    .then(data => {
+      console.log(`Found ${data.match.length} sales for ${query}`);
+      response.send(data);
+    })
   } else {
     response.send("Error: Query was empty");
   }

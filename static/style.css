@@ -53,10 +53,6 @@ h3 {
   font-weight: 400;
 }
 
-a {
-  text-decoration: none;
-  color: black; 
-}
 
 h3 {
   font-weight: bold;
@@ -71,6 +67,15 @@ li {
 ul, li {
   box-sizing: border-box;
 }
+
+
+a {
+  text-decoration: none;
+  color: black; 
+}
+
+
+/* SALE CARDS */
 
 /* <ul> */
 .cards-wrapper {
@@ -99,7 +104,7 @@ ul, li {
   border: 1px solid #ff8c00;
 }
 
-
+/* FEEDBACK MESSAGES */
 .error {
   background-color: #ffe5ea;
   padding: 1em;
