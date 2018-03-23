@@ -1,18 +1,64 @@
 <h1>Secret Escapes</h1>
 
-{{#if salesForCity}}
-	<h2>{{city}}</h2>
-	<p>We've found some sales in {{city}}</p>
-	{{#each salesForCity}}
-		<li><a href='https://www.secretescapes.com/sale/offers/{{id}}'>{{title}}</a></li>
-	{{/each}}
-{{/if}}
+<div>
+  <div data-bind="if: $data.city">
+    <h2 data-bind="text: city"></h2>
+    <ul data-bind="foreach: cityResults">
+      <li><a href="#" target="_blank" data-bind="attr: {href: 'https://www.secretescapes.com/sale/offers/'+id}"><span data-bind="text: title"></span></a></li>
+    </ul>
+  </div>
 
-{{#if salesForCountry}}
-	<h2>{{country}}</h2>
-	<p>We've found some sales in {{country}}</p>
-	{{#each salesForCountry}}
-		<li><a href='https://www.secretescapes.com/sale/offers/{{id}}'>{{title}}</a></li>
-	{{/each}}
-{{/if}}
+  <div data-bind="if: !$data.city">
+    <p>
+      Sorry, we couldn't find any city.
+    </p>
+  </div>
+</div>
 
+<div>
+  <div data-bind="if: $data.country">
+    <h2 data-bind="text: country"></h2>
+    <ul data-bind="foreach: countryResults">
+      <li><a href="#" target="_blank" data-bind="attr: {href: 'https://www.secretescapes.com/sale/offers/'+id}"><span data-bind="text: title"></span></a></li>
+    </ul>
+  </div>
+
+  <div data-bind="if: !$data.country">
+    <p>
+      Sorry, we couldn't find any country.
+    </p>
+  </div>
+</div>
+
+<script>
+  $( document ).ready(() => {
+    var myViewModel = {
+      cityResults: ko.observableArray(),
+      countryResults: ko.observableArray(),
+      {{#if city}}
+        city: "{{city}}",
+      {{/if}}
+      {{#if country}}
+        country: "{{country}}"
+      {{/if}}
+    };
+    ko.applyBindings(myViewModel);
+    
+    if (myViewModel.city) {
+      $.ajax({
+        type: "GET",
+        url: `sales?query=${myViewModel.city}`,
+        success: data => myViewModel.cityResults(data.match)
+      });
+    }
+    
+    if (myViewModel.country) {
+      $.ajax({
+        type: "GET",
+        url: `sales?query=${myViewModel.country}`,
+        success: data => myViewModel.countryResults(data.match)
+      });
+    }
+    
+  });
+</script>
