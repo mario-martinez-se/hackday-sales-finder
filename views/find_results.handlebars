@@ -3,6 +3,15 @@
 <div>
   <div data-bind="if: $data.city">
     <h2 data-bind="text: city"></h2>
+    <div data-bind="if: cityResults().length == 0 && !noResultsForCity()">
+      <p>
+        We are searching sales in <span data-bind="text: city"></span>...
+      </p>
+      <img style="height: 60px;" src="https://cdn.glitch.com/fb258a74-00e9-4f2c-a2b1-35f603dbcab3%2Floading.gif?1521806195818"/>
+    </div>
+    <p data-bind="if: noResultsForCity()">
+      Sorry, we couldn't find any sales for <span data-bind="text: city"></span>
+    </p>
     <ul data-bind="foreach: cityResults">
       <li><a href="#" target="_blank" data-bind="attr: {href: 'https://www.secretescapes.com/sale/offers/'+id}"><span data-bind="text: title"></span></a></li>
     </ul>
@@ -18,6 +27,15 @@
 <div>
   <div data-bind="if: $data.country">
     <h2 data-bind="text: country"></h2>
+    <div data-bind="if: countryResults().length == 0 && !noResultsForCountry()">
+      <p>
+        We are searching sales in <span data-bind="text: country"></span>...
+      </p>
+      <img style="height: 60px;" src="https://cdn.glitch.com/fb258a74-00e9-4f2c-a2b1-35f603dbcab3%2Floading.gif?1521806195818"/>
+    </div>
+    <p data-bind="if: noResultsForCountry()">
+      Sorry, we couldn't find any sales for <span data-bind="text: country"></span>
+    </p>
     <ul data-bind="foreach: countryResults">
       <li><a href="#" target="_blank" data-bind="attr: {href: 'https://www.secretescapes.com/sale/offers/'+id}"><span data-bind="text: title"></span></a></li>
     </ul>
@@ -35,6 +53,8 @@
     var myViewModel = {
       cityResults: ko.observableArray(),
       countryResults: ko.observableArray(),
+      noResultsForCity: ko.observable(false),
+      noResultsForCountry: ko.observable(false),
       {{#if city}}
         city: "{{city}}",
       {{/if}}
@@ -48,7 +68,8 @@
       $.ajax({
         type: "GET",
         url: `sales?query=${myViewModel.city}`,
-        success: data => myViewModel.cityResults(data.match)
+        success: data => data.match.length > 0 ? myViewModel.cityResults(data.match) : myViewModel.noResultsForCity(true),
+        error: () => noResultsForCity(true)
       });
     }
     
@@ -56,7 +77,8 @@
       $.ajax({
         type: "GET",
         url: `sales?query=${myViewModel.country}`,
-        success: data => myViewModel.countryResults(data.match)
+        success: data => data.match.length > 0 ? myViewModel.countryResults(data.match) : myViewModel.noResultsForCountry(true),
+        error: () => noResultsForCountry(true)
       });
     }
     

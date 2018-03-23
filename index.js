@@ -28,22 +28,22 @@ app.get('/sales', (request, response) => {
     response.send("Error: Query was empty");
   }
 });
-app.post('/find', (request, response) => {
-	rp(request.body.url_analyse)
+app.get('/find', (request, response) => {
+	rp(request.query.url_analyse)
 	.then(data => rp (getGCPNLRequestForQuery(data))
 	)
 	.then(results => rp(`https://maps.googleapis.com/maps/api/place/textsearch/json?key=${process.env.GOOGLE_PLACES_API_KEY}&query=${getMostProminentPlace(results)}`))
-	.then(data => rp(`https://maps.googleapis.com/maps/api/place/details/json?key=${process.env.GOOGLE_PLACES_API_KEY}&placeid=${JSON.parse(data).results[0].place_id}&language=en`))
+	.then(data => rp(`https://maps.googleapis.com/maps/api/place/details/json?key=${process.env.GOOGLE_PLACES_API_KEY}&placeid=${(JSON.parse(data).results[0]).place_id}&language=en`))
 	.then(data => {
 		const address_components = JSON.parse(data).result.address_components;
 		const country = (address_components.find(address_component => _.any(address_component.types, type => type == 'country')) || {long_name: undefined}).long_name;
 		const city = _.max(address_components.filter(address_component => _.any(address_component.types, type => /^administrative_area_level_(\d)/g.exec(type) != null)).map(address_component => ({long_name: address_component.long_name, type: address_component.types.find(type => /^administrative_area_level_(\d)/g.exec(type) != null)})), address_component => /^administrative_area_level_(\d)/g.exec(address_component.type)[1]).long_name || undefined;
 
-    response.render('find_results', {salesForCity: [], salesForCountry: [], city: city, country: country})
+    response.render('find_results', {city: city, country: country})
 	})
 	.catch(err => {
 	console.error('ERROR:', err);
-	response.send(`Error happened: ${err}`);
+	response.render('find_results', {});
 	});
 })
 
