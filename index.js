@@ -70,7 +70,7 @@ app.listen(port, (err) => {
 function getGCPNLRequestForQuery(query) {
 	return {
 		method: 'POST',
-		uri: `https://language.googleapis.com/v1beta2/documents:analyzeEntities?key=${process.env.SE_API_TOKEN}`,
+		uri: `https://language.googleapis.com/v1beta2/documents:analyzeEntities?key=${process.env.GOOGLE_PLACES_API_KEY}`,
 		body: {
 			document: {content: query, type: 'HTML'}
 		},
