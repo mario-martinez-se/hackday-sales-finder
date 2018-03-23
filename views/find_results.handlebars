@@ -68,7 +68,7 @@
       $.ajax({
         type: "GET",
         url: `sales?query=${myViewModel.city}`,
-        success: data => data.match.length > 0 ? myViewModel.cityResults(data.match) : noResultsForCity(true),
+        success: data => data.match.length > 0 ? myViewModel.cityResults(data.match) : myViewModel.noResultsForCity(true),
         error: () => noResultsForCity(true)
       });
     }
@@ -77,7 +77,7 @@
       $.ajax({
         type: "GET",
         url: `sales?query=${myViewModel.country}`,
-        success: data => data.match.length > 0 ? myViewModel.countryResults(data.match) : noResultsForCountry(true),
+        success: data => data.match.length > 0 ? myViewModel.countryResults(data.match) : myViewModel.noResultsForCountry(true),
         error: () => noResultsForCountry(true)
       });
     }
