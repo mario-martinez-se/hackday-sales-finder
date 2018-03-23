@@ -1,5 +1,3 @@
-// Imports the Google Cloud client library
-const language = require('@google-cloud/language');
 const _ = require('underscore')._;
 const Promise = require('bluebird');
 const fs = Promise.promisifyAll(require('fs'));
@@ -23,12 +21,7 @@ app.get('/', (request, response) =>{
 
 app.post('/find', (request, response) => {
 	rp(request.body.url_analyse)
-	.then(data => new language.LanguageServiceClient()
-		.analyzeEntities(
-			{
-				document: {content: data, type: 'HTML'}
-			}
-		)
+	.then(data => rp (getGCPNLRequestForQuery(data))
 	)
 	.then(results => rp(`https://maps.googleapis.com/maps/api/place/textsearch/json?key=${process.env.GOOGLE_PLACES_API_KEY}&query=${getMostProminentPlace(results)}`))
 	.then(data => rp(`https://maps.googleapis.com/maps/api/place/details/json?key=${process.env.GOOGLE_PLACES_API_KEY}&placeid=${JSON.parse(data).results[0].place_id}&language=en`))
@@ -74,6 +67,19 @@ app.listen(port, (err) => {
   console.log(`server is listening on ${port}`)
 })
 
+function getGCPNLRequestForQuery(query) {
+	return {
+		method: 'POST',
+		uri: `https://language.googleapis.com/v1beta2/documents:analyzeEntities?key=${process.env.SE_API_TOKEN}`,
+		body: {
+			document: {content: query, type: 'HTML'}
+		},
+		headers: {
+			'content-type': 'application/json',
+		},
+		json: true}
+}
+
 function getSEPostRequestForQuery(query) {
 	return {
 	    method: 'POST',
@@ -91,5 +97,5 @@ function getSEPostRequestForQuery(query) {
 }
 
 function getMostProminentPlace(results) {
-	return results[0].entities.filter(entity => entity.type == "LOCATION" && _.any(entity.mentions.map(mention => mention.type), type => type == 'PROPER')).slice(0, 1).map(entity => entity.name)[0];
+	return results.entities.filter(entity => entity.type == "LOCATION" && _.any(entity.mentions.map(mention => mention.type), type => type == 'PROPER')).slice(0, 1).map(entity => entity.name)[0];
 }
